@@ -33,8 +33,14 @@ RUN cd /pysmt; pysmt-install --confirm-agreement --cudd
 # PICOSAT
 RUN cd /pysmt; pysmt-install --confirm-agreement --picosat
 
-# Check installation
-RUN cd /pysmt; . /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/set_paths.sh; export; pysmt-install --check
 
-# Prepare for testing
-RUN pip install nose && pip install coverage && pip install six
+# Set paths
+ENV PYSMT_MSAT_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/mathsat-5.3.6-linux-x86_64/python:/usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7
+ENV PYSMT_Z3_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/z3_bin/lib/python2.7/dist-packages
+ENV PYSMT_CVC4_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/CVC4_bin/share/pyshared:/usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/CVC4_bin/lib/pyshared
+ENV PYSMT_YICES_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/pyices-aa0b91c39aa00c19c2160e83aad822dc468ce328/build/lib.linux-x86_64-2.7
+ENV PYSMT_PYCUDD_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/repycudd-4861f4df8abc2ca205a6a09b30fdc8cfd29f6ebb
+ENV PYSMT_PICOSAT_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/picosat-960:/usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7
+
+# Export PYTHONPATH globally
+ENV PYTHONPATH ${PYSMT_MSAT_PATH}:${PYSMT_Z3_PATH}:${PYSMT_CVC4_PATH}:${PYSMT_YICES_PATH}:${PYSMT_PYCUDD_PATH}:${PYSMT_PICOSAT_PATH}
