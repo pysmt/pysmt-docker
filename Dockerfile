@@ -35,3 +35,6 @@ RUN cd /pysmt; pysmt-install --confirm-agreement --picosat
 
 # Check installation
 RUN cd /pysmt; . /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/set_paths.sh; export; pysmt-install --check
+
+# Prepare for testing
+RUN pip install nose && pip install coverage && pip install six
