@@ -3,44 +3,87 @@ MAINTAINER Andrea Micheli<micheli.andrea@gmail.com>, Marco Gario <marco.gario@gm
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install pre-requisites
+# Install all pre-requisites
 RUN apt-get update && \
-    apt-get -y install python-setuptools python-nose python-pip python-dev make build-essential swig libgmp-dev autoconf libtool antlr3 wget curl libboost1.55-dev && \
+    apt-get -y install git python-setuptools python-nose python-pip python-dev make build-essential swig libgmp-dev autoconf libtool antlr3 wget curl libboost1.55-dev python3-six python3-dev && \
     apt-get clean
 
-
-# Add PySMT's Solvers installer
-RUN pip install pysmt
+################################################################################
+# PYTHON 2
 
 # Create a folder for pysmt
-RUN mkdir /pysmt
+RUN git clone https://github.com/pysmt/pysmt.git /pysmt
 
 # MSAT
-RUN cd /pysmt; pysmt-install --confirm-agreement --msat
+RUN cd /pysmt; python install.py --confirm-agreement --msat
 
 # Z3
-RUN cd /pysmt; pysmt-install --confirm-agreement --z3
+RUN cd /pysmt; python install.py --confirm-agreement --z3
 
 # CVC4
-RUN cd /pysmt; pysmt-install --confirm-agreement --cvc4
+RUN cd /pysmt; python install.py --confirm-agreement --cvc4
 
 # YICES
-RUN cd /pysmt; pysmt-install --confirm-agreement --yices
+RUN cd /pysmt; python install.py --confirm-agreement --yices
 
 # CUDD
-RUN cd /pysmt; pysmt-install --confirm-agreement --cudd
+RUN cd /pysmt; python install.py --confirm-agreement --cudd
 
 # PICOSAT
-RUN cd /pysmt; pysmt-install --confirm-agreement --picosat
+RUN cd /pysmt; python install.py --confirm-agreement --picosat
+
+# Change dir name to prepare for python3 install
+RUN mv /pysmt/.smt_solvers /pysmt/.smt_solvers_py2
 
 
-# Set paths
-ENV PYSMT_MSAT_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/mathsat-5.3.6-linux-x86_64/python:/usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7
-ENV PYSMT_Z3_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/z3_bin/lib/python2.7/dist-packages
-ENV PYSMT_CVC4_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/CVC4_bin/share/pyshared:/usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/CVC4_bin/lib/pyshared
-ENV PYSMT_YICES_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/pyices-aa0b91c39aa00c19c2160e83aad822dc468ce328/build/lib.linux-x86_64-2.7
-ENV PYSMT_PYCUDD_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/repycudd-4861f4df8abc2ca205a6a09b30fdc8cfd29f6ebb
-ENV PYSMT_PICOSAT_PATH /usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/picosat-960:/usr/local/lib/python2.7/dist-packages/pysmt/cmd/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7
+################################################################################
+# PYTHON 3
+
+## Temporarily switch the interpreter symlink to avoid problems in install.py
+RUN mv /usr/bin/python /usr/bin/python.back && cp /usr/bin/python3 /usr/bin/python
+
+# MSAT with Python3
+RUN cd /pysmt; python3 install.py --confirm-agreement --msat
+
+# PICOSAT with Python3
+RUN cd /pysmt; python3 install.py --confirm-agreement --picosat
+
+# Restore python2 interpreter
+RUN mv /usr/bin/python.back /usr/bin/python
+
+# Change dir name for uniformity
+RUN mv /pysmt/.smt_solvers /pysmt/.smt_solvers_py3
+
+
+################################################################################
+# SET PATHS
+
+ENV PYSMT_PATH /pysmt
+
+ENV PYSMT_MSAT_PATH /pysmt/.smt_solvers_py2/mathsat-5.3.6-linux-x86_64/python:/pysmt/.smt_solvers_py2/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7
+ENV PYSMT_Z3_PATH /pysmt/.smt_solvers_py2/z3_bin/lib/python2.7/dist-packages
+ENV PYSMT_CVC4_PATH /pysmt/.smt_solvers_py2/CVC4_bin/share/pyshared:/pysmt/.smt_solvers_py2/CVC4_bin/lib/pyshared
+ENV PYSMT_YICES_PATH /pysmt/.smt_solvers_py2/pyices-aa0b91c39aa00c19c2160e83aad822dc468ce328/build/lib.linux-x86_64-2.7
+ENV PYSMT_PYCUDD_PATH /pysmt/.smt_solvers_py2/repycudd-4861f4df8abc2ca205a6a09b30fdc8cfd29f6ebb
+ENV PYSMT_PICOSAT_PATH /pysmt/.smt_solvers_py2/picosat-960:/pysmt/.smt_solvers_py2/picosat-960/build/lib.linux-x86_64-2.7
+
+ENV PYTHONPATH_2 ${PYSMT_PATH}:${PYSMT_MSAT_PATH}:${PYSMT_Z3_PATH}:${PYSMT_CVC4_PATH}:${PYSMT_YICES_PATH}:${PYSMT_PYCUDD_PATH}:${PYSMT_PICOSAT_PATH}
+
+
+ENV PYSMT_MSAT_PATH_3 /pysmt/.smt_solvers_py3/mathsat-5.3.6-linux-x86_64/python:/pysmt/.smt_solvers_py3/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-3.4
+ENV PYSMT_PICOSAT_PATH_3 /pysmt/.smt_solvers_py3/picosat-960:/pysmt/.smt_solvers_py3/picosat-960/build/lib.linux-x86_64-3.4
+
+ENV PYTHONPATH_3 ${PYSMT_PATH}:${PYSMT_MSAT_PATH_3}:${PYSMT_PICOSAT_PATH_3}
+
+
+################################################################################
+# Final config and switch commands
+
+# To switch to python 2 type "source /pysmt/pysmt-python2"
+COPY ./pysmt-python2 /pysmt/pysmt-python2
+
+# To switch to python 3 type "source /pysmt/pysmt-python3"
+COPY ./pysmt-python3 /pysmt/pysmt-python3
 
 # Export PYTHONPATH globally
-ENV PYTHONPATH ${PYSMT_MSAT_PATH}:${PYSMT_Z3_PATH}:${PYSMT_CVC4_PATH}:${PYSMT_YICES_PATH}:${PYSMT_PYCUDD_PATH}:${PYSMT_PICOSAT_PATH}
+ENV PYTHONPATH PYTHONPATH_2
