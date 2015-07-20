@@ -86,4 +86,4 @@ COPY ./pysmt-python2 /pysmt/pysmt-python2
 COPY ./pysmt-python3 /pysmt/pysmt-python3
 
 # Export PYTHONPATH globally
-ENV PYTHONPATH PYTHONPATH_2
+ENV PYTHONPATH ${PYTHONPATH_2}
