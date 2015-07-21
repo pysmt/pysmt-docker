@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install all pre-requisites
 RUN apt-get update && \
-    apt-get -y install git python-setuptools python-nose python-pip python-dev make build-essential swig libgmp-dev autoconf libtool antlr3 wget curl libboost1.55-dev python3-six python3-dev && \
+    apt-get -y install git python-setuptools python-nose python-pip python-dev make build-essential swig libgmp-dev autoconf libtool antlr3 wget curl libboost1.55-dev python3-six python3-dev pypy && \
     apt-get clean
 
 ################################################################################
