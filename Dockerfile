@@ -68,9 +68,6 @@ RUN mv /usr/bin/python.back /usr/bin/python
 RUN mv /tmp/msat.back /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7 && \
     mv /tmp/picosat.back /pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7
 
-# Move Boolector dir
-RUN mv /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd_py3
-
 
 ################################################################################
 # SET PATHS
@@ -90,7 +87,7 @@ ENV PYTHONPATH_2 ${PYSMT_PATH}:${PYSMT_MSAT_PATH}:${PYSMT_Z3_PATH}:${PYSMT_CVC4_
 
 ENV PYSMT_MSAT_PATH_3 /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python:/pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-3.4
 ENV PYSMT_PICOSAT_PATH_3 /pysmt/.smt_solvers/picosat-960:/pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-3.4
-ENV PYSMT_BTOR_PATH_3 /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd_py3/boolector
+ENV PYSMT_BTOR_PATH_3 /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd/boolector
 
 ENV PYTHONPATH_3 ${PYSMT_PATH}:${PYSMT_MSAT_PATH_3}:${PYSMT_PICOSAT_PATH_3}:${PYSMT_BTOR_PATH_3}
 
