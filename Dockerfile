@@ -2,12 +2,16 @@ FROM ubuntu:14.04
 MAINTAINER Andrea Micheli<micheli.andrea@gmail.com>, Marco Gario <marco.gario@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-
-ENV CONTAINER_DATE 20150826
+ENV CONTAINER_DATE 20151008
 
 # Install all pre-requisites
 RUN apt-get update && \
-    apt-get -y install git python-setuptools python-nose python-pip python-dev make build-essential swig libgmp-dev autoconf libtool antlr3 wget curl libboost1.55-dev python3-six python3-dev pypy cython cython3 && \
+    apt-get -y install \
+    git python-setuptools python-nose\
+    python-pip python-dev make build-essential\
+    swig libgmp-dev autoconf libtool antlr3 wget curl\
+    libboost1.55-dev python3-six \
+    python3-dev pypy cython cython3 && \
     apt-get clean
 
 ################################################################################
@@ -43,7 +47,7 @@ RUN cd /pysmt; python install.py --confirm-agreement --btor
 # PYTHON 3
 
 # Save MathSAT and Picosat directories
-RUN mv /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7 /tmp/msat.back && \
+RUN mv /pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python/build/lib.linux-x86_64-2.7 /tmp/msat.back && \
     mv /pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7 /tmp/picosat.back
 
 # Move Boolector dir
@@ -65,7 +69,7 @@ RUN cd /pysmt; python install.py --confirm-agreement --btor
 RUN mv /usr/bin/python.back /usr/bin/python
 
 # Restore MathSAT and Picosat directories
-RUN mv /tmp/msat.back /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7 && \
+RUN mv /tmp/msat.back /pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python/build/lib.linux-x86_64-2.7 && \
     mv /tmp/picosat.back /pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7
 
 
@@ -74,20 +78,20 @@ RUN mv /tmp/msat.back /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/buil
 
 ENV PYSMT_PATH /pysmt
 
-ENV PYSMT_MSAT_PATH /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python:/pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-2.7
+ENV PYSMT_MSAT_PATH /pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python:/pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python/build/lib.linux-x86_64-2.7
 ENV PYSMT_Z3_PATH /pysmt/.smt_solvers/z3_bin/lib/python2.7/dist-packages
 ENV PYSMT_CVC4_PATH /pysmt/.smt_solvers/CVC4_bin/share/pyshared:/pysmt/.smt_solvers/CVC4_bin/lib/pyshared
 ENV PYSMT_YICES_PATH /pysmt/.smt_solvers/pyices-aa0b91c39aa00c19c2160e83aad822dc468ce328/build/lib.linux-x86_64-2.7
 ENV PYSMT_PYCUDD_PATH /pysmt/.smt_solvers/repycudd-4861f4df8abc2ca205a6a09b30fdc8cfd29f6ebb
 ENV PYSMT_PICOSAT_PATH /pysmt/.smt_solvers/picosat-960:/pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7
-ENV PYSMT_BTOR_PATH /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd_py2/boolector
+ENV PYSMT_BTOR_PATH /pysmt/.smt_solvers/boolector-2.1.1-with-lingeling-b85_py2/boolector
 
 ENV PYTHONPATH_2 ${PYSMT_PATH}:${PYSMT_MSAT_PATH}:${PYSMT_Z3_PATH}:${PYSMT_CVC4_PATH}:${PYSMT_YICES_PATH}:${PYSMT_PYCUDD_PATH}:${PYSMT_PICOSAT_PATH}:${PYSMT_BTOR_PATH}
 
 
-ENV PYSMT_MSAT_PATH_3 /pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python:/pysmt/.smt_solvers/mathsat-5.3.6-linux-x86_64/python/build/lib.linux-x86_64-3.4
+ENV PYSMT_MSAT_PATH_3 /pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python:/pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python/build/lib.linux-x86_64-3.4
 ENV PYSMT_PICOSAT_PATH_3 /pysmt/.smt_solvers/picosat-960:/pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-3.4
-ENV PYSMT_BTOR_PATH_3 /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd/boolector
+ENV PYSMT_BTOR_PATH_3 /pysmt/.smt_solvers/boolector-2.1.1-with-lingeling-b85/boolector
 
 ENV PYTHONPATH_3 ${PYSMT_PATH}:${PYSMT_MSAT_PATH_3}:${PYSMT_PICOSAT_PATH_3}:${PYSMT_BTOR_PATH_3}
 
