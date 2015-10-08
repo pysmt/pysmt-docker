@@ -2,12 +2,16 @@ FROM ubuntu:14.04
 MAINTAINER Andrea Micheli<micheli.andrea@gmail.com>, Marco Gario <marco.gario@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-
-ENV CONTAINER_DATE 20150826
+ENV CONTAINER_DATE 20151008
 
 # Install all pre-requisites
 RUN apt-get update && \
-    apt-get -y install git python-setuptools python-nose python-pip python-dev make build-essential swig libgmp-dev autoconf libtool antlr3 wget curl libboost1.55-dev python3-six python3-dev pypy cython cython3 && \
+    apt-get -y install \
+    git python-setuptools python-nose\
+    python-pip python-dev make build-essential\
+    swig libgmp-dev autoconf libtool antlr3 wget curl\
+    libboost1.55-dev python3-six \
+    python3-dev pypy cython cython3 && \
     apt-get clean
 
 ################################################################################
