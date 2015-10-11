@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 MAINTAINER Andrea Micheli<micheli.andrea@gmail.com>, Marco Gario <marco.gario@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV CONTAINER_DATE 20151008
+ENV CONTAINER_DATE 20151011
 
 # Install all pre-requisites
 RUN apt-get update && \
@@ -51,7 +51,7 @@ RUN mv /pysmt/.smt_solvers/mathsat-5.3.8-linux-x86_64/python/build/lib.linux-x86
     mv /pysmt/.smt_solvers/picosat-960/build/lib.linux-x86_64-2.7 /tmp/picosat.back
 
 # Move Boolector dir
-RUN mv /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd /pysmt/.smt_solvers/boolector-2.0.7-with-lingeling-azd_py2
+RUN mv /pysmt/.smt_solvers/boolector-2.1.1-with-lingeling-b85 /pysmt/.smt_solvers/boolector-2.1.1-with-lingeling-b85_py2
 
 # Temporarily switch the interpreter symlink to avoid problems in install.py
 RUN mv /usr/bin/python /usr/bin/python.back && cp /usr/bin/python3 /usr/bin/python
